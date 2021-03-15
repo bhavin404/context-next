@@ -1,19 +1,21 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect,useContext} from 'react'
 import { Toolbar } from '../components/Toolbar'
 import styles from '../styles/Covid.module.css'
 import {connect} from 'react-redux'
+import DatasProvider, { DatasContext } from './context/DatasProvider'
+
 
 const Covid19 = ({datas}) => {
     console.log(datas);
     const [text, setText] = useState('')
+    const datasContext = useContext(DatasContext)
 
-    const onSubmit = (e) =>{
-        e.preventDefault();
-        setText(e.target.inpt.value)
-        console.log(text);
-    }
-
-    
+    const { fetchcountry} = datasContext
+    useEffect(() => {
+        fetchcountry(datas)
+    }, [datas])
+   
+        console.log(datasContext.country.data && datasContext.country.data.location);
     return (
         <>
         <Toolbar/>
@@ -22,20 +24,9 @@ const Covid19 = ({datas}) => {
                 <div className={styles.header}>
                     <h1>Live <span>Covid19</span> Status</h1>
                 </div>
-                {/* <div className={styles.input}>
-                    <form onSubmit={(e)=> onSubmit(e)}>
-                    <input 
-                    type="text" 
-                    name="inpt" 
-                    id=""
-                    placeholder="Enter country Name"
-                    value={text}
-                    onChange={(e) =>setText(e.target.value)}
-                    />
-                    </form>
-                </div> */}
+               
                 <div className={styles.location}>
-                    <h1>{datas.data.location}</h1>
+                    <h1>{datasContext.country.data && datasContext.country.data.location}</h1>
                 </div>
 
                 <div className={styles.status}>
@@ -44,20 +35,20 @@ const Covid19 = ({datas}) => {
                         <h1 className={styles.death}>
                             Death
                         </h1>
-                        <h3> {datas.data.deaths}</h3>
+                        <h3> {datasContext.country.data && datasContext.country.data.deaths}</h3>
                 </div>
                
                 <div className={styles.box}>
                 <h1 className={styles.confirmed}>
                             Confirmed
                         </h1>
-                        <h3> {datas.data.confirmed}</h3>
+                        <h3> {datasContext.country.data && datasContext.country.data.confirmed}</h3>
                 </div>
                 <div className={styles.box}>
                 <h1 className={styles.recovered}>
                             Recovered
                         </h1>
-                        <h3> {datas.data.recovered}</h3>
+                        <h3> {datasContext.country.data && datasContext.country.data.recovered}</h3>
                 </div>
                 
                 </div>
@@ -87,11 +78,11 @@ export const getServerSideProps = async pageContext =>{
        }
     }
 
-    const mapStatetoProps =(state) =>{
-        return {
-            data : state.datas.deaths
-        }
-    }
+    // const mapStatetoProps =(state) =>{
+    //     return {
+    //         data : state.datas.deaths
+    //     }
+    // }
 
 
  }

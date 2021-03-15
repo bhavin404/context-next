@@ -1,53 +1,62 @@
-import React,{useEffect,useContext} from 'react'
+import React, { useEffect, useContext } from 'react'
 import styles from '../styles/Country.module.css'
 import { Toolbar } from '../components/Toolbar'
-import {connect} from 'react-redux';
-import DatasProvider, {DatasContext} from './context/DatasProvider'
+import { connect } from 'react-redux';
+import DatasProvider, { DatasContext } from './context/DatasProvider'
 
 
-const countrystats = ({datas}) => {
+const countrystats = ({ datas }) => {
     console.log(datas);
+
     const datasContext = useContext(DatasContext)
-  
+
+    const { fetchdata } = datasContext
+
     useEffect(() => {
-    datasContext.fetchdata(datas)    
-    }, [])
+        fetchdata(datas)
+
+    }, [datas])
+    console.log("mmmmmmmm",datasContext.datas.data && datasContext.datas.data.covid19Stats);
+ 
+    // setTimeout(function () {
+    //     console.log(datasContext.datas.data);
+    // },100)
 
     return (
         <>
-          
+
             <Toolbar />
             <div className={styles.container}>
                 <div className={styles.heading}>
                     <h1>Status of Provinces </h1>
-                </div>  
+                </div>
                 <div className={styles.status}>
-                    {datas.data.covid19Stats.map((array,index) => 
-                    <div key={index} className={styles.box}>
-                    <h3 className={styles.death}>
-                        {/* {country.country} */}
-                        {array.province}
-                </h3>
-                    <div className={styles.loads}>
-                        <div className={styles.load}>
-                            <p>  <span> Death</span> <br/> {array.deaths}</p>
-                        </div> <div className={styles.load}>
-                            <p> <span className={styles.recovered}> Recovered</span> <br/> {array.recovered}</p>
+                    {datasContext.datas.data && datasContext.datas.data.covid19Stats.map((array, index) =>
+                        <div key={index} className={styles.box}>
+                            <h3 className={styles.death}>
+                                {/* {country.country} */}
+                                {array.province}
+                            </h3>
+                            <div className={styles.loads}>
+                                <div className={styles.load}>
+                                    <p>  <span> Death</span> <br /> {array.deaths}</p>
+                                </div> <div className={styles.load}>
+                                    <p> <span className={styles.recovered}> Recovered</span> <br /> {array.recovered}</p>
+                                </div>
+
+                            </div>
                         </div>
 
-                    </div>
-                </div>
-
                     )}
-                    
+
 
 
 
                 </div>
             </div>
-           
+
         </>
-       
+
     )
 }
 
